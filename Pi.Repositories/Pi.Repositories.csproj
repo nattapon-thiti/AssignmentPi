@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Pi.Models\Pi.Models.csproj" />
+  </ItemGroup>
+
 </Project>

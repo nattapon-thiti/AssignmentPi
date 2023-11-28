@@ -6,4 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Pi.Interfaces\Pi.Interfaces.csproj" />
+    <ProjectReference Include="..\Pi.Models\Pi.Models.csproj" />
+    <ProjectReference Include="..\Pi.Repositories\Pi.Repositories.csproj" />
+  </ItemGroup>
+
 </Project>
