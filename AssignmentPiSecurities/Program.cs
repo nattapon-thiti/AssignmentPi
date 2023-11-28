@@ -1,5 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
+using Pi.Interfaces.Repositories.Users;
+using Pi.Interfaces.Services.Users;
+using Pi.Repositories.Users;
+using Pi.Services.UserServices;
 using System.Net.Sockets;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +26,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddTransient<IUserServices, UserServices>();
+builder.Services.AddTransient<IUserRepositories, UsersRepositories>();
 
 var app = builder.Build();
 
