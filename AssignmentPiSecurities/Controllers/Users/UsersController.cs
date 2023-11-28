@@ -18,22 +18,45 @@ namespace AssignmentPiSecurities.Controllers.Users
         [Route("Get")]
         public async Task<IActionResult> GetUsers()
         {
-            var response = await _userServices.GetUsers();
-            return Ok(response);
+            try
+            {
+                var response = await _userServices.GetUsers();
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
         }
         [HttpPost]
         [Route("CreateOrUpdate")]
         public async Task<IActionResult> UpdateUsers()
         {
-            var response = await _userServices.UpdateUsers();
-            return Ok(response);
+            try
+            {
+                var response = await _userServices.UpdateUsers();
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
         }
         [HttpDelete]
         [Route("Delete")]
         public async Task<IActionResult> DeleteUsers()
         {
-            var response = await _userServices.DeleteUsers();
-            return Ok(response);
+            try
+            {
+                var response = await _userServices.DeleteUsers();
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
