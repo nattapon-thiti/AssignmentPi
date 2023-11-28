@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace Pi.Interfaces.Repositories.Users
 {
-    internal class IUserRepositories
+    public interface IUserRepositories
     {
+        Task<string> GetAsync(string? id);
+        Task<string> CreateOrUpdateAsync(string? id);
+        Task<string> DeleteAsync(string? id);
     }
 }

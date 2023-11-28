@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace Pi.Interfaces.Services.Users
 {
-    internal class IUserServices
+    public interface IUserServices
     {
+        Task<string> GetUsers();
+        Task<string> UpdateUsers();
+        Task<string> DeleteUsers();
     }
 }
