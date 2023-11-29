@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Pi.Interfaces.Services.Users;
+using Pi.Models.RequestModels.Users;
 
 namespace AssignmentPiSecurities.Controllers.Users
 {
@@ -31,11 +32,11 @@ namespace AssignmentPiSecurities.Controllers.Users
         }
         [HttpPost]
         [Route("CreateOrUpdate")]
-        public async Task<IActionResult> UpdateUsers()
+        public async Task<IActionResult> CreateOrUpdateUsers(UserCreateOrUpdateRequest request)
         {
             try
             {
-                var response = await _userServices.UpdateUsers();
+                var response = await _userServices.CreateOrUpdateUsers(request);
                 return Ok(response);
             }
             catch (Exception ex)
@@ -46,11 +47,11 @@ namespace AssignmentPiSecurities.Controllers.Users
         }
         [HttpDelete]
         [Route("Delete")]
-        public async Task<IActionResult> DeleteUsers()
+        public async Task<IActionResult> DeleteUsers(int request)
         {
             try
             {
-                var response = await _userServices.DeleteUsers();
+                var response = await _userServices.DeleteUsers(request);
                 return Ok(response);
             }
             catch (Exception ex)

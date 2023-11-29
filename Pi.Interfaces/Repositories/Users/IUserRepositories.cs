@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Pi.Models.Entities.PI;
+using Pi.Models.RequestModels.Users;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +10,8 @@ namespace Pi.Interfaces.Repositories.Users
 {
     public interface IUserRepositories
     {
-        Task<string> GetAsync(string? id);
-        Task<string> CreateOrUpdateAsync(string? id);
-        Task<string> DeleteAsync(string? id);
+        Task<IEnumerable<PiUser>> GetAsync();
+        Task<bool> CreateOrUpdateAsync(UserCreateOrUpdateRequest request);
+        Task<bool> DeleteAsync(int id);
     }
 }
