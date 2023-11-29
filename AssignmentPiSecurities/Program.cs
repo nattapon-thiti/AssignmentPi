@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.EntityFrameworkCore;
 using Pi.Interfaces.Repositories.Users;
 using Pi.Interfaces.Services.Users;
+using Pi.Models.Entities.PI;
 using Pi.Repositories.Users;
 using Pi.Services.UserServices;
 using System.Net.Sockets;
@@ -21,6 +23,10 @@ builder.Services.AddApiVersioning(options =>
         new HeaderApiVersionReader("X-Version"), // Headers > X-Version = 1.0
         new MediaTypeApiVersionReader("ver")); // Headers > Accept = application/json; ver=1.0
 });
+
+#region add db connection
+builder.Services.AddDbContext<PiContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("PiConnection")), ServiceLifetime.Transient);
+#endregion
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
