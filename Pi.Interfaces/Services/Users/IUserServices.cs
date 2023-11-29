@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Pi.Models.Entities.PI;
+using Pi.Models.RequestModels.Users;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +10,8 @@ namespace Pi.Interfaces.Services.Users
 {
     public interface IUserServices
     {
-        Task<string> GetUsers();
-        Task<string> UpdateUsers();
-        Task<string> DeleteUsers();
+        Task<IEnumerable<PiUser>> GetUsers();
+        Task<bool> CreateOrUpdateUsers(UserCreateOrUpdateRequest request);
+        Task<bool> DeleteUsers(int request);
     }
 }

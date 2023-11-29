@@ -1,5 +1,7 @@
 ﻿using Pi.Interfaces.Repositories.Users;
 using Pi.Interfaces.Services.Users;
+using Pi.Models.Entities.PI;
+using Pi.Models.RequestModels.Users;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,19 +17,22 @@ namespace Pi.Services.UserServices
         {
             _userRepositories = userRepositories;
         }
-        public Task<string> DeleteUsers()
+        public async Task<bool> DeleteUsers(int request)
         {
-            throw new NotImplementedException();
+            var result = await _userRepositories.DeleteAsync(request);
+            return result;
         }
 
-        public Task<string> GetUsers()
+        public async Task<IEnumerable<PiUser>> GetUsers()
         {
-            throw new NotImplementedException();
+            IEnumerable<PiUser> result = await _userRepositories.GetAsync();
+            return result;
         }
 
-        public Task<string> UpdateUsers()
+        public async Task<bool> CreateOrUpdateUsers(UserCreateOrUpdateRequest request)
         {
-            throw new NotImplementedException();
+            var result = await _userRepositories.CreateOrUpdateAsync(request);
+            return result;
         }
     }
 }
