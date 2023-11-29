@@ -2,6 +2,7 @@
 using Pi.Interfaces.Repositories.Users;
 using Pi.Models.Entities.PI;
 using Pi.Models.RequestModels.Users;
+using Pi.Models.ResponseModels.Users;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,21 +18,27 @@ namespace Pi.Repositories.Users
         {
             _context = context;
         }
-
-        public async Task<bool> CreateOrUpdateAsync(UserCreateOrUpdateRequest request)
+        public async Task<CreateUserResponse> CreateOrUpdateAsync(UserCreateOrUpdateRequest request)
         {
             using (var transaction = await _context.Database.BeginTransactionAsync())
             {
                 try
                 {
+                    CreateUserResponse result = new CreateUserResponse();
                     #region update user
                     if (request?.Id != null)
                     {
-                        PiUser result = await GetAsync(request.Id.Value);
-                        if (result != null)
+                        PiUser user = await GetAsync(request.Id.Value);
+                        if (user != null)
                         {
-                            result.GivenName = (string.IsNullOrWhiteSpace(request.GivenName)) ? result.GivenName : request.GivenName;
-                            result.Email = (string.IsNullOrWhiteSpace(request.Email)) ? result.Email : request.Email;
+                            user.GivenName = (string.IsNullOrWhiteSpace(request.GivenName)) ? user.GivenName : request.GivenName;
+                            user.Email = (string.IsNullOrWhiteSpace(request.Email)) ? user.Email : request.Email;
+                            await _context.SaveChangesAsync();
+                            result = new CreateUserResponse(true, user, $"User id {user.Id} updated");
+                        }
+                        else
+                        {
+                            result = new CreateUserResponse(false, user, $"User id {request.Id} not found");
                         }
                     }
                     #endregion
@@ -45,42 +52,60 @@ namespace Pi.Repositories.Users
                             Email = request.Email,
                         };
                         await _context.PiUsers.AddAsync(user);
+                        await _context.SaveChangesAsync();
+                        result = new CreateUserResponse(true, user, $"User id {user.Id} created");
                     }
                     #endregion
 
-                    await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
-                    return true;
+                    return result;
                 }
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    //throw;
-                    return false;
+                    throw ex;
                 }
             }
         }
-
         public async Task<bool> DeleteAsync(int id)
         {
-            var entityToDelete = await _context.PiUsers.FindAsync(id);
-            if (entityToDelete != null)
+            try
             {
-                _context.PiUsers.Remove(entityToDelete);
-                return await _context.SaveChangesAsync() > 0;
+                var user = await _context.PiUsers.FindAsync(id);
+                if (user != null)
+                {
+                    _context.PiUsers.Remove(user);
+                    return await _context.SaveChangesAsync() > 0;
+                }
+                else { return false; }
             }
-            else { return false; }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
-
         public async Task<IEnumerable<PiUser>> GetAsync(string? request)
         {
-            IEnumerable<PiUser> result = await _context.PiUsers.Where(o => request == null || o.GivenName.Contains(request)).ToListAsync();
-            return result;
+            try
+            {
+                return await _context.PiUsers.Where(o => request == null || o.GivenName.Contains(request)).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
         }
         public async Task<PiUser> GetAsync(int request)
         {
-            PiUser result = await _context.PiUsers.FindAsync(request);
-            return result;
+            try
+            {
+                return await _context.PiUsers.FindAsync(request);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }
