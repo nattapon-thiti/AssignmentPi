@@ -10,7 +10,7 @@ namespace Pi.Interfaces.Services.Users
 {
     public interface IUserServices
     {
-        Task<IEnumerable<PiUser>> GetUsers();
+        Task<IEnumerable<PiUser>> GetUsers(string? request);
         Task<bool> CreateOrUpdateUsers(UserCreateOrUpdateRequest request);
         Task<bool> DeleteUsers(int request);
     }

@@ -72,9 +72,9 @@ namespace Pi.Repositories.Users
             else { return false; }
         }
 
-        public async Task<IEnumerable<PiUser>> GetAsync()
+        public async Task<IEnumerable<PiUser>> GetAsync(string? request)
         {
-            IEnumerable<PiUser> result = await _context.PiUsers.ToListAsync();
+            IEnumerable<PiUser> result = await _context.PiUsers.Where(o => request == null || o.GivenName.Contains(request)).ToListAsync();
             return result;
         }
         public async Task<PiUser> GetAsync(int request)

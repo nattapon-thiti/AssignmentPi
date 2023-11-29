@@ -17,11 +17,11 @@ namespace AssignmentPiSecurities.Controllers.Users
         }
         [HttpGet]
         [Route("Get")]
-        public async Task<IActionResult> GetUsers()
+        public async Task<IActionResult> GetUsers(string? request)
         {
             try
             {
-                var response = await _userServices.GetUsers();
+                var response = await _userServices.GetUsers(request);
                 return Ok(response);
             }
             catch (Exception ex)

@@ -23,9 +23,9 @@ namespace Pi.Services.UserServices
             return result;
         }
 
-        public async Task<IEnumerable<PiUser>> GetUsers()
+        public async Task<IEnumerable<PiUser>> GetUsers(string? request)
         {
-            IEnumerable<PiUser> result = await _userRepositories.GetAsync();
+            IEnumerable<PiUser> result = await _userRepositories.GetAsync(request);
             return result;
         }
 

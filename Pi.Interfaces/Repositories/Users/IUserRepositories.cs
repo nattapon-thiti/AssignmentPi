@@ -10,7 +10,7 @@ namespace Pi.Interfaces.Repositories.Users
 {
     public interface IUserRepositories
     {
-        Task<IEnumerable<PiUser>> GetAsync();
+        Task<IEnumerable<PiUser>> GetAsync(string? request);
         Task<bool> CreateOrUpdateAsync(UserCreateOrUpdateRequest request);
         Task<bool> DeleteAsync(int id);
     }
