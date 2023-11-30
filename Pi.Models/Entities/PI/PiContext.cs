@@ -16,6 +16,7 @@ namespace Pi.Models.Entities.PI
         {
         }
 
+        public virtual DbSet<PiAdmin> PiAdmins { get; set; } = null!;
         public virtual DbSet<PiUser> PiUsers { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -29,15 +30,44 @@ namespace Pi.Models.Entities.PI
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<PiAdmin>(entity =>
+            {
+                entity.ToTable("pi_admin");
+
+                entity.Property(e => e.CreatedDate).HasPrecision(0);
+
+                entity.Property(e => e.Email)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.MockFrontEndAccessToken)
+                    .HasMaxLength(250)
+                    .HasColumnName("MockFrontEnd_AccessToken");
+
+                entity.Property(e => e.MockFrontEndRefreshToken)
+                    .HasMaxLength(250)
+                    .HasColumnName("MockFrontEnd_RefreshToken");
+
+                entity.Property(e => e.Password).HasMaxLength(250);
+
+                entity.Property(e => e.UpdatedDate).HasPrecision(0);
+
+                entity.Property(e => e.UserName).HasMaxLength(50);
+            });
+
             modelBuilder.Entity<PiUser>(entity =>
             {
                 entity.ToTable("pi_users");
+
+                entity.Property(e => e.CreatedDate).HasPrecision(0);
 
                 entity.Property(e => e.Email)
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
                 entity.Property(e => e.GivenName).HasMaxLength(250);
+
+                entity.Property(e => e.UpdatedDate).HasPrecision(0);
             });
 
             OnModelCreatingPartial(modelBuilder);
