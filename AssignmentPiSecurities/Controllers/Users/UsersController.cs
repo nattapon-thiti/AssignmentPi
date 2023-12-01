@@ -38,11 +38,11 @@ namespace AssignmentPiSecurities.Controllers.Users
         }
         [HttpPost]
         [Route("CreateOrUpdate")]
-        public async Task<IActionResult> CreateOrUpdateUsers(UserCreateOrUpdateRequest request)
+        public async Task<IActionResult> CreateOrUpdateUser(UserCreateOrUpdateRequest request)
         {
             try
             {
-                var response = await _userServices.CreateOrUpdateUsers(request);
+                var response = await _userServices.CreateOrUpdateUser(request);
                 return Ok(response);
             }
             catch (Exception ex)

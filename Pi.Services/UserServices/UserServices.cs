@@ -25,7 +25,7 @@ namespace Pi.Services.UserServices
                 var result = await _userRepositories.DeleteAsync(request);
                 return result;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }
@@ -42,12 +42,36 @@ namespace Pi.Services.UserServices
                 throw ex;
             }
         }
-        public async Task<CreateUserResponse> CreateOrUpdateUsers(UserCreateOrUpdateRequest request)
+        public async Task<CreateUserResponse> CreateOrUpdateUser(UserCreateOrUpdateRequest request)
         {
             try
             {
-                var result = await _userRepositories.CreateOrUpdateAsync(request);
-                return result;
+                CreateUserResponse result = new CreateUserResponse();
+
+                if (request?.Id != null)
+                {
+                    #region create new user
+                    PiUser user = await _userRepositories.GetAsync(request.Id.Value);
+                    if (user != null)
+                    {
+                        bool updatedUser = await _userRepositories.UpdateUser(request, user);
+                        result = new CreateUserResponse(updatedUser, user, $"User id {user.Id} updated");
+                    }
+                    else
+                    {
+                        result = new CreateUserResponse(false, user, $"User id {request.Id} not found");
+                    }
+                    return result;
+                    #endregion
+                }
+                else
+                {
+                    #region create new user
+                    PiUser createdUser = await _userRepositories.CreateUser(request);
+                    return new CreateUserResponse(true, createdUser, $"User id {createdUser.Id} created");
+                    #endregion
+                }
+
             }
             catch (Exception ex)
             {

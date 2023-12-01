@@ -19,7 +19,8 @@ namespace Pi.Repositories.Users
             _context = context;
         }
         public async Task<CreateUserResponse> CreateOrUpdateAsync(UserCreateOrUpdateRequest request)
-        {
+        {   
+            // discountinue method after refactor code
             using (var transaction = await _context.Database.BeginTransactionAsync())
             {
                 try
@@ -59,6 +60,50 @@ namespace Pi.Repositories.Users
 
                     await transaction.CommitAsync();
                     return result;
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    throw ex;
+                }
+            }
+        }
+        public async Task<PiUser> CreateUser(UserCreateOrUpdateRequest request)
+        {
+            using (var transaction = await _context.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    var user = new PiUser()
+                    {
+                        GivenName = request.GivenName,
+                        Email = request.Email,
+                    };
+                    await _context.PiUsers.AddAsync(user);
+                    await _context.SaveChangesAsync();
+
+                    await transaction.CommitAsync();
+                    return user;
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    throw ex;
+                }
+            }
+        }
+        public async Task<bool> UpdateUser(UserCreateOrUpdateRequest request, PiUser user)
+        {
+            using (var transaction = await _context.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    user.GivenName = (string.IsNullOrWhiteSpace(request.GivenName)) ? user.GivenName : request.GivenName;
+                    user.Email = (string.IsNullOrWhiteSpace(request.Email)) ? user.Email : request.Email;
+                    await _context.SaveChangesAsync();
+
+                    await transaction.CommitAsync();
+                    return true;
                 }
                 catch (Exception ex)
                 {
