@@ -51,18 +51,17 @@ namespace Pi.Services.Admin
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-        public async Task<bool> RegisterUser(RegisterUserRequest req)
+        public async Task<bool> RegisterUser(RegisterUserRequest request)
         {
-            req.Password = EncryptPasswd(req.Password);
-            var result = await _adminRepositories.RegisterUser(req);
+            request.Password = EncryptPasswd(request.Password);
+            var result = await _adminRepositories.RegisterUser(request);
             return result;
         }
-        public async Task<string> ValidateLogin(LoginRequest req)
+        public async Task<string> ValidateLogin(LoginRequest request)
         {
-            var result = await _adminRepositories.GetCipherPasswd(req);
+            var result = await _adminRepositories.GetCipherPasswd(request);
             result = DecryptPasswd(result);
-            var a = req.Password == result;
-            return (req.Password == result ? await GenToken() : string.Empty);
+            return (request.Password == result ? await GenToken() : string.Empty);
         }
         private string EncryptPasswd(string passwd)
         {

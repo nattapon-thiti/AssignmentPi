@@ -38,6 +38,7 @@ namespace AssignmentPiSecurities.Controllers.Users
         }
         [HttpPost]
         [Route("CreateOrUpdate")]
+        [Authorize]
         public async Task<IActionResult> CreateOrUpdateUser(UserCreateOrUpdateRequest request)
         {
             try
@@ -53,11 +54,12 @@ namespace AssignmentPiSecurities.Controllers.Users
         }
         [HttpDelete]
         [Route("Delete")]
+        [Authorize]
         public async Task<IActionResult> DeleteUsers(int request)
         {
             try
             {
-                var response = await _userServices.DeleteUsers(request);
+                var response = await _userServices.DeleteUser(request);
                 if (response)
                 {
                     return Ok(new BaseResponse(true, $"User Id {request} deleted"));
