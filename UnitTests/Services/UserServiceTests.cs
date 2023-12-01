@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using AssignmentPiSecurities.Controllers.Users;
+using Moq;
 using Pi.Interfaces.Repositories.Users;
 using Pi.Interfaces.Services.Users;
 using Pi.Models.Entities.PI;
@@ -14,22 +15,23 @@ namespace UnitTests.Services
     [TestClass()]
     public class UnitTest2
     {
-        private UserServices services;
+        private UserServices _userServices;
         private readonly IUserRepositories _userRepositories;
+        private readonly Mock<IUserRepositories> _mockUserRepositories;
 
-        //public UnitTest2(UserServices services, IUserRepositories userRepositories)
-        //{
-        //    this.services = services;
-        //    this._userRepositories = userRepositories;
-        //}
+        public UnitTest2()
+        {
+            _mockUserRepositories = new Mock<IUserRepositories>();
+            _userServices = new UserServices(_mockUserRepositories.Object);
+        }
         [TestMethod()]
         public async Task UserGetListTest()
         {
             #region arramge
-            services = new UserServices(_userRepositories);
+            _userServices = new UserServices(_userRepositories);
 
             var mockUserRepository = new Mock<IUserRepositories>();
-            mockUserRepository.Setup(repo => repo.GetAsync())
+            mockUserRepository.Setup(repo => repo.GetAsync(null))
                               .ReturnsAsync(new List<PiUser>
                               {
                                   new PiUser { Id=1, GivenName = "mana", Email = "mana@gmail.com" },
@@ -41,7 +43,7 @@ namespace UnitTests.Services
 
             #region actual
 
-            IEnumerable<PiUser> result = await userService.GetUsers();
+            IEnumerable<PiUser> result = await userService.GetUsers(null);
             #endregion
 
             #region assert
@@ -51,6 +53,19 @@ namespace UnitTests.Services
             Assert.IsNotNull(result);
             Assert.AreEqual(2, result.Count());
             #endregion
+        }
+
+        [TestMethod()]
+        public async Task GetUsers_ExceptionHandling()
+        {
+            // Arrange
+            _mockUserRepositories.Setup(repo => repo.GetAsync(It.IsAny<string>()))
+                              .ThrowsAsync(new Exception("Simulated error"));
+
+            var userService = new UserServices(_mockUserRepositories.Object);
+
+            // Act and Assert
+            await Assert.ThrowsExceptionAsync<Exception>(async () => await userService.GetUsers("errorRequest"));
         }
     }
 }
