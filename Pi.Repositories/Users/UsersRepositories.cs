@@ -12,7 +12,7 @@ namespace Pi.Repositories.Users
 {
     public class UsersRepositories : IUserRepositories
     {
-        readonly PiContext _context;
+        private readonly PiContext _context;
         public UsersRepositories(PiContext context)
         {
             _context = context;

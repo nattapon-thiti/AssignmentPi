@@ -12,7 +12,7 @@ namespace Pi.Services.UserServices
 {
     public class UserServices : IUserServices
     {
-        readonly IUserRepositories _userRepositories;
+        private readonly IUserRepositories _userRepositories;
         public UserServices(IUserRepositories userRepositories)
         {
             _userRepositories = userRepositories;
