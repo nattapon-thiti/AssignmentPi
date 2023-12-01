@@ -2,6 +2,7 @@
 using Pi.Interfaces.Services.Users;
 using Pi.Models.Entities.PI;
 using Pi.Models.RequestModels.Users;
+using Pi.Models.ResponseModels.Users;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,20 +20,39 @@ namespace Pi.Services.UserServices
         }
         public async Task<bool> DeleteUsers(int request)
         {
-            var result = await _userRepositories.DeleteAsync(request);
-            return result;
+            try
+            {
+                var result = await _userRepositories.DeleteAsync(request);
+                return result;
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
         }
-
-        public async Task<IEnumerable<PiUser>> GetUsers()
+        public async Task<IEnumerable<PiUser>> GetUsers(string? request)
         {
-            IEnumerable<PiUser> result = await _userRepositories.GetAsync();
-            return result;
+            try
+            {
+                IEnumerable<PiUser> result = await _userRepositories.GetAsync(request);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
-
-        public async Task<bool> CreateOrUpdateUsers(UserCreateOrUpdateRequest request)
+        public async Task<CreateUserResponse> CreateOrUpdateUsers(UserCreateOrUpdateRequest request)
         {
-            var result = await _userRepositories.CreateOrUpdateAsync(request);
-            return result;
+            try
+            {
+                var result = await _userRepositories.CreateOrUpdateAsync(request);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }
