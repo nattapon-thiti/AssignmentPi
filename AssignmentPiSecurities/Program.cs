@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Pi.Interfaces.Repositories.Admin;
 using Pi.Interfaces.Repositories.Users;
 using Pi.Interfaces.Services.Admin;
@@ -11,7 +12,7 @@ using Pi.Models.Entities.PI;
 using Pi.Repositories.Admin;
 using Pi.Repositories.Users;
 using Pi.Services.Admin;
-using Pi.Services.UserServices;
+using Pi.Services.User;
 using System.Net.Sockets;
 using System.Text;
 
@@ -52,6 +53,34 @@ builder.Services.AddAuthentication(options =>
     };
 });
 #endregion
+
+builder.Services.AddSwaggerGen(option =>
+{
+    option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
+    option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please enter a valid token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
+    });
+    option.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type=ReferenceType.SecurityScheme,
+                    Id="Bearer"
+                }
+            },
+            new string[]{}
+        }
+    });
+});
 
 #region add db connection
 builder.Services.AddDbContext<PiContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("PiConnection")), ServiceLifetime.Transient);
