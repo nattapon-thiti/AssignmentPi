@@ -1,10 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
+using Pi.Interfaces.Repositories.Admin;
 using Pi.Interfaces.Repositories.Users;
+using Pi.Interfaces.Services.Admin;
 using Pi.Interfaces.Services.Users;
 using Pi.Models.Entities.PI;
+using Pi.Repositories.Admin;
 using Pi.Repositories.Users;
+using Pi.Services.Admin;
 using Pi.Services.UserServices;
 using System.Net.Sockets;
 
@@ -35,6 +39,9 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddTransient<IUserServices, UserServices>();
 builder.Services.AddTransient<IUserRepositories, UsersRepositories>();
+
+builder.Services.AddTransient<IAdminServices, AdminServices>();
+builder.Services.AddTransient<IAdminRepositories, AdminRepositories>();
 
 var app = builder.Build();
 
