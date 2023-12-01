@@ -40,5 +40,11 @@ namespace Pi.Models.ResponseModels
             this.IsSuccess = isSuccess;
             this.Message = message;
         }
+        public BaseResponse(bool isSuccess, string? message, object data)
+        {
+            this.IsSuccess = isSuccess;
+            this.Message = message;
+            this.Data = data;
+        }
     }
 }

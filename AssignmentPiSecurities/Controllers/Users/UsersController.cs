@@ -22,6 +22,7 @@ namespace AssignmentPiSecurities.Controllers.Users
         }
         [HttpGet]
         [Route("Get")]
+        [Authorize]
         public async Task<IActionResult> GetUsers(string? request)
         {
             try
