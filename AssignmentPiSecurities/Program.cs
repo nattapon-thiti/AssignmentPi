@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Pi.Interfaces.Repositories.Admin;
 using Pi.Interfaces.Repositories.Users;
 using Pi.Interfaces.Services.Admin;
@@ -11,6 +13,7 @@ using Pi.Repositories.Users;
 using Pi.Services.Admin;
 using Pi.Services.UserServices;
 using System.Net.Sockets;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +30,28 @@ builder.Services.AddApiVersioning(options =>
         new HeaderApiVersionReader("X-Version"), // Headers > X-Version = 1.0
         new MediaTypeApiVersionReader("ver")); // Headers > Accept = application/json; ver=1.0
 });
+
+#region authorization
+// Configure JWT authentication
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
+        RequireExpirationTime = true
+    };
+});
+#endregion
 
 #region add db connection
 builder.Services.AddDbContext<PiContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("PiConnection")), ServiceLifetime.Transient);
@@ -54,6 +79,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

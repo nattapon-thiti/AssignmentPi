@@ -1,4 +1,5 @@
 ﻿using Pi.Models.Entities.PI;
+using Pi.Models.RequestModels.Admin;
 using Pi.Models.RequestModels.Users;
 using Pi.Models.ResponseModels.Users;
 using System;
@@ -11,6 +12,8 @@ namespace Pi.Interfaces.Repositories.Admin
 {
     public interface IAdminRepositories
     {
-        Task<IEnumerable<PiUser>> GetAsync(string? request);
+        Task<PiAdmin> GetAsync(string? user, string? email);
+        Task<bool> RegisterUser(RegisterUserRequest req);
+        Task<string> GetCipherPasswd(LoginRequest req);
     }
 }

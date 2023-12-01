@@ -1,4 +1,5 @@
 ﻿using Pi.Models.Entities.PI;
+using Pi.Models.RequestModels.Admin;
 using Pi.Models.RequestModels.Users;
 using Pi.Models.ResponseModels.Users;
 using System;
@@ -11,6 +12,8 @@ namespace Pi.Interfaces.Services.Admin
 {
     public interface IAdminServices
     {
-        Task<IEnumerable<PiUser>> GetUsers(string? request);
+        Task<string> GenToken();
+        Task<bool> RegisterUser(RegisterUserRequest req);
+        Task<string> ValidateLogin(LoginRequest req);
     }
 }

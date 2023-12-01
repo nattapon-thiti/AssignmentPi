@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Pi.Interfaces.Services.Admin;
 using Pi.Models.Entities.PI;
-using Pi.Models.RequestModels.Users;
+using Pi.Models.RequestModels.Admin;
 using Pi.Models.ResponseModels;
 using Pi.Models.ResponseModels.Users;
 using Pi.Services.Admin;
@@ -21,19 +21,38 @@ namespace AssignmentPiSecurities.Controllers.Admin
         {
             _adminServices = adminServices;
         }
-        [HttpGet]
-        [Route("Get")]
-        public async Task<IActionResult> GetUsers(string? request)
+        
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("Register-User")]
+        public async Task<IActionResult> Register(RegisterUserRequest req)
         {
             try
             {
-                var response = await _adminServices.GetUsers(request);
-                return Ok(new GetUserResponse(response));
+                var result = await _adminServices.RegisterUser(req);
+                return Ok(result);
             }
             catch (Exception ex)
             {
                 return BadRequest(new BaseResponse(false, ex.Message));
             }
+
+        }
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("Login")]
+        public async Task<IActionResult> Login(LoginRequest req)
+        {
+            try
+            {
+                var result = await _adminServices.ValidateLogin(req);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new BaseResponse(false, ex.Message));
+            }
+
         }
     }
 }
